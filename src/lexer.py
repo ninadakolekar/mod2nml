@@ -7,6 +7,12 @@ import airspeed
 import util
 
 def lexer(modFile,verbose=False):
+    
+    try:
+        open(modFile)
+    except FileNotFoundError:
+        print(f'File not found: {modFile}')
+        exit()
 
     blocks = {}
     data = {}
@@ -80,9 +86,9 @@ def lexer(modFile,verbose=False):
     for state in stateBlock:
         gate = {}
         gate['id'] = state
-        gate['instances'] = str(countInstances(breakpointBlock,s))
-        gate['open'] = '<closed_state id="'+s+'0"/>'
-        gate['open'] = '<closed_state id="'+s+'"/>'
+        gate['instances'] = str(countInstances(breakpointBlock,state))
+        gate['open'] = '<closed_state id="'+state+'0"/>'
+        gate['open'] = '<closed_state id="'+state+'"/>'
         gateList.append(gate)
     
     data['gates'] = gateList
@@ -109,6 +115,6 @@ def countInstances(br,ch):
 
 
 if __name__=="__main__":
-    lexer(modFile,)
+    lexer("../examples/mod/neuron.mod",True)
 
 
