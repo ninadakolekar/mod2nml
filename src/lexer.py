@@ -39,5 +39,37 @@ def lexer(modFile):
                     # Initialize empty list to store the parameters specified in this block
                     blocks[blockHeading] = []
 
+                    dictData = lines[braceIndex+1:]
+                    braceCount = checkBraces(dictData,1)
+
+                    while braceCount>0:
+                        
+                        # If data in dataDict
+                        if(len(dictData)>0):
+                            blocks[blockHeading].append(dictData)
+                        
+                        currentLineNumber+=1
+
+                        dictData = modFileData[currentLineNumber]
+
+                        braceCount = checkBraces(dictData,braceCount)
+
+                    newData = dictData[:-1].strip()
+                    if len(newData)>0:
+                        blocks[blockHeading].append(newData)
+
+        currentLineNumber+=1
+    
+    stateBlock = blocks['STATE']
+
+    for line in stateBlock:
+        if ' ' in line or '\t' in line:
+            stateBlock.remove(line)
+            for state in line.split():
+                blocks['STATE'].append(state)
+
+
+                    
+
 
 

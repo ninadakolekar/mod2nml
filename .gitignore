@@ -190,3 +190,5 @@ pyvenv.cfg
 pip-selfcheck.json
 
 # End of https://www.gitignore.io/api/c++,linux,python,jupyternotebook
+
+.vscode
