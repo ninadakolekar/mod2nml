@@ -1,3 +1,5 @@
+import airspeed
+
 def checkBraces(inputString, braceCounter):
     if len(inputString)>0:
         for c in inputString:
@@ -12,7 +14,7 @@ def feedData(templateFile,data):
         feeder = airspeed.Template(f.read())
     return feeder.merge(data)
 
-def isValidBlock(string blockHeading):
+def isValidBlock(blockHeading):
     blocks = ['TITLE','UNITS','NEURON','PARAMETER','ASSIGNED','STATE','PROCEDURE','DERIVATIVE','BREAKPOINT','INITIAL','UNITSOFF','UNITSON']
     if blockHeading in blocks:
         return True

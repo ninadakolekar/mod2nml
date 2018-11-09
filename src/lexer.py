@@ -96,9 +96,19 @@ def lexer(modFile,verbose=False):
     
     return data
 
+def countInstances(br,ch):
+  count = 0
+  for s in br[1:]:
+    sl = s.split('*')
+    for x in sl:
+      if ('^' in x) and x.split('^')[0]==ch:
+        count+=int(x.split('^')[1])
+      elif x==ch:
+        count+=1
+  return count
 
 
-                    
-
+if __name__=="__main__":
+    lexer(modFile,)
 
 
