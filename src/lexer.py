@@ -86,7 +86,7 @@ def lexer(modFile,verbose=False):
     for state in stateBlock:
         gate = {}
         gate['id'] = state
-        gate['instances'] = str(countInstances(breakpointBlock,state))
+        gate['instances'] = 0
         gate['open'] = '<closed_state id="'+state+'0"/>'
         gate['open'] = '<closed_state id="'+state+'"/>'
         gateList.append(gate)
@@ -101,17 +101,6 @@ def lexer(modFile,verbose=False):
         pp.pprint(blocks)
     
     return data
-
-def countInstances(br,ch):
-  count = 0
-  for s in br[1:]:
-    sl = s.split('*')
-    for x in sl:
-      if ('^' in x) and x.split('^')[0]==ch:
-        count+=int(x.split('^')[1])
-      elif x==ch:
-        count+=1
-  return count
 
 
 if __name__=="__main__":
