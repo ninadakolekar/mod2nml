@@ -115,6 +115,6 @@ def countInstances(br,ch):
 
 
 if __name__=="__main__":
-    lexer("../examples/mod/neuron.mod",True)
+    lexer("../examples/mod/KCa_Channel.mod",True)
 
 
