@@ -1,15 +1,12 @@
 import sys
 import os
-import pprint 
 
 import airspeed
 
 # Custom modules
 import util
 
-pp = pprint.PrettyPrinter(depth=4)
-
-def lexer(modFile):
+def lexer(modFile,verbose=False):
 
     blocks = {}
     data = {}
@@ -30,8 +27,8 @@ def lexer(modFile):
                 blocks['TITLE'] = line[6:].strip()
             
             if '{' in line:
-                braceIndex = lines.index('{')
-                blockHeading = lines[:braceIndex].strip()
+                braceIndex = line.index('{')
+                blockHeading = line[:braceIndex].strip()
 
                 # Check if block heading is valid
                 if util.isValidBlock(blockHeading):
@@ -39,8 +36,8 @@ def lexer(modFile):
                     # Initialize empty list to store the parameters specified in this block
                     blocks[blockHeading] = []
 
-                    dictData = lines[braceIndex+1:]
-                    braceCount = checkBraces(dictData,1)
+                    dictData = line[braceIndex+1:]
+                    braceCount = util.checkBraces(dictData,1)
 
                     while braceCount>0:
                         
@@ -52,7 +49,7 @@ def lexer(modFile):
 
                         dictData = modFileData[currentLineNumber]
 
-                        braceCount = checkBraces(dictData,braceCount)
+                        braceCount = util.checkBraces(dictData,braceCount)
 
                     newData = dictData[:-1].strip()
                     if len(newData)>0:
@@ -67,6 +64,38 @@ def lexer(modFile):
             stateBlock.remove(line)
             for state in line.split():
                 blocks['STATE'].append(state)
+
+    neuronBlock = blocks['NEURON']
+    breakpointBlock = blocks['BREAKPOINT']
+
+    for line in neuronBlock:
+        if line.startswith('SUFFIX'):
+            data['id'] = line[7:].strip()
+        if line.startswith('USEION'):
+            if 'WRITE' in line:
+                data['species'] = line.split()[1]
+
+    gateList = []
+
+    for state in stateBlock:
+        gate = {}
+        gate['id'] = state
+        gate['instances'] = str(countInstances(breakpointBlock,s))
+        gate['open'] = '<closed_state id="'+s+'0"/>'
+        gate['open'] = '<closed_state id="'+s+'"/>'
+        gateList.append(gate)
+    
+    data['gates'] = gateList
+
+    data['type'] = 'ionChannelHH'
+
+    if verbose:
+        import pprint
+        pp = pprint.PrettyPrinter(depth=4)
+        pp.pprint(blocks)
+    
+    return data
+
 
 
                     
