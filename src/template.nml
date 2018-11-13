@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <neuroml xmlns="http://www.neuroml.org/schema/neuroml2" 
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2beta4.xsd" 
@@ -14,9 +15,11 @@
         
 #foreach ($gate in $gates)##
 
-        <gate id="${gate.id}" type="${gate.type}" instances="${gate.instances}">
-            
+        <gate id="${gate.id}" instances="${gate.instances}">
+            <forwardRate type="HHExpLinearRate" rate="1per_ms" midpoint="-40mV" scale="10mV"/>
+            <reverseRate type="HHExpRate" rate="4per_ms" midpoint="-65mV" scale="-18mV"/>
         </gate>
+
 #end##   
         
     </ionChannel>

@@ -18,8 +18,9 @@ def translatorWrapper(data,template,outFilename):
   output = open(outFilename,"w")
   output.write(feedData(template,data))
 
-def translator(dataFile):
-  translatorWrapper(lexer(dataFile,False),"template.nml","output.nml")
+def translator(dataFile,verbose):
+  tokens = lexer(dataFile,verbose)
+  translatorWrapper(tokens,"template.nml","output.nml")
   
 if __name__=="__main__":
-    translator("../examples/mod/KCa_Channel.mod")
+    translator("../examples/mod/K_HH.mod",True)
