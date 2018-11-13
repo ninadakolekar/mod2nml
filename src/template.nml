@@ -16,8 +16,13 @@
 #foreach ($gate in $gates)##
 
         <gate id="${gate.id}" instances="${gate.instances}">
-            <forwardRate type="HHExpLinearRate" rate="1per_ms" midpoint="-40mV" scale="10mV"/>
-            <reverseRate type="HHExpRate" rate="4per_ms" midpoint="-65mV" scale="-18mV"/>
+
+            <closed_state id="${gate.closed}"/>
+            <open_state id="${gate.open}"/>
+            
+            <transition name="alpha" from="${gate.closed}" to="${gate.open}" expr_form="" rate="" scale="" midpoint="" />
+            <transition name="beta" from="${gate.open}" to="${gate.closed}" expr_form="" rate="" scale="" midpoint="" />
+
         </gate>
 
 #end##   

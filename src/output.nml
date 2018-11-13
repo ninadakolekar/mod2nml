@@ -12,8 +12,13 @@
                 
 
         <gate id="n" instances="0">
-            <forwardRate type="HHExpLinearRate" rate="1per_ms" midpoint="-40mV" scale="10mV"/>
-            <reverseRate type="HHExpRate" rate="4per_ms" midpoint="-65mV" scale="-18mV"/>
+
+            <closed_state id="n0"/>
+            <open_state id="n"/>
+            
+            <transition name="alpha" from="n0" to="n" expr_form="exp_linear" rate="0.1" scale="10" midpoint="-55" />
+            <transition name="beta" from="n" to="n0" expr_form="exponential" rate="0.125" scale="-80" midpoint="-65" />
+
         </gate>
 
         

@@ -87,8 +87,8 @@ def lexer(modFile,verbose=False):
         gate = {}
         gate['id'] = state
         gate['instances'] = 0
-        gate['open'] = '<closed_state id="'+state+'0"/>'
-        gate['open'] = '<closed_state id="'+state+'"/>'
+        gate['closed'] = state + str(0)
+        gate['open'] = state
         gateList.append(gate)
     
     data['gates'] = gateList
