@@ -79,7 +79,7 @@ def lexer(modFile,verbose=False):
             data['id'] = line[7:].strip()
         if line.startswith('USEION'):
             if 'WRITE' in line:
-                data['species'] = line.split()[1]
+                data['species'] = line.split("WRITE")[1].split()[0]
 
     gateList = []
 
