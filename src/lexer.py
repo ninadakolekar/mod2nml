@@ -32,6 +32,10 @@ def lexer(modFile,verbose=False):
                 
                 blocks['TITLE'] = line[6:].strip()
             
+            if line.startswith('PROCEDURE'):
+                blocks['PROCEDURE'] = {}
+
+            
             if '{' in line:
                 braceIndex = line.index('{')
                 blockHeading = line[:braceIndex].strip()
@@ -86,7 +90,7 @@ def lexer(modFile,verbose=False):
     for state in stateBlock:
         gate = {}
         gate['id'] = state
-        gate['instances'] = 0
+        gate['instances'] = countInstances(breakpointBlock,state)
         gate['closed'] = state + str(0)
         gate['open'] = state
         gateList.append(gate)
@@ -95,6 +99,8 @@ def lexer(modFile,verbose=False):
 
     data['type'] = 'ionChannelHH'
 
+    # procedureBlock = blocks['PROCEDURE']
+
     if verbose:
         import pprint
         pp = pprint.PrettyPrinter(depth=4)
@@ -102,6 +108,18 @@ def lexer(modFile,verbose=False):
     
     return data
 
+
+def countInstances(br,ch):
+    count = 0
+    for s in br:
+        sl = s.replace(" ","").split('*')   
+        for x in sl:
+            if ('^' in x) and x.split('^')[0].strip().replace("(","")==ch:
+                count+=int(x.split('^')[1].replace(")",""))
+            elif x==ch:
+                count+=1
+        print("countInstances "+s+": ",ch+" ",count)
+    return str(count)
 
 if __name__=="__main__":
     lexer("../examples/mod/KCa_Channel.mod",True)
