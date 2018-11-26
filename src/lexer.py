@@ -93,8 +93,10 @@ def lexer(modFile,verbose=False):
         gate['instances'] = countInstances(breakpointBlock,state)
         gate['closed'] = state + str(0)
         gate['open'] = state
+        gate['forwardEquationForm'] = getEquationForm()
+        gate['backwardEquationForm'] = getEquationForm()
         gateList.append(gate)
-    
+        
     data['gates'] = gateList
 
     data['type'] = 'ionChannelHH'
@@ -108,6 +110,9 @@ def lexer(modFile,verbose=False):
     
     return data
 
+# Ankur, please complete this function
+def getEquationForm():
+    return ''
 
 def countInstances(br,ch):
     count = 0

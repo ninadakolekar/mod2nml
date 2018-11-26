@@ -20,8 +20,8 @@
             <closed_state id="${gate.closed}"/>
             <open_state id="${gate.open}"/>
             
-            <transition name="alpha" from="${gate.closed}" to="${gate.open}" expr_form="" rate="" scale="" midpoint="" />
-            <transition name="beta" from="${gate.open}" to="${gate.closed}" expr_form="" rate="" scale="" midpoint="" />
+            <transition name="alpha" from="${gate.closed}" to="${gate.open}" expr_form="${gate.forwardEquationForm}" rate="" scale="" midpoint="" />
+            <transition name="beta" from="${gate.open}" to="${gate.closed}" expr_form="${gate.backwardEquationForm}" rate="" scale="" midpoint="" />
 
         </gate>
 

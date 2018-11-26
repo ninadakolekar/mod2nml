@@ -8,7 +8,7 @@ def translatorWrapper(data,template,outFilename):
 
 def translator(dataFile,verbose):
   tokens = lexer(dataFile,verbose)
-  translatorWrapper(tokens,"template.nml","output.nml")
+  translatorWrapper(tokens,"channel_template.nml","output.nml")
   
 if __name__=="__main__":
     translator("../examples/mod/K_HH.mod",True)
