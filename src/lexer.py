@@ -34,16 +34,17 @@ def lexer(modFile,verbose=False):
             
             # Complete this
             if line.startswith('PROCEDURE'):
-                blocks['PROCEDURE'] = {}
+                #DEBUG
+                print("Procedure Detected --> ",currentLineNumber)
 
             
-            if '{' in line:
+            if '{' in line or line.startswith('PROCEDURE'):
                 braceIndex = line.index('{')
                 blockHeading = line[:braceIndex].strip()
 
                 # Check if block heading is valid
                 if util.isValidBlock(blockHeading):
-                    
+
                     # Initialize empty list to store the parameters specified in this block
                     blocks[blockHeading] = []
 

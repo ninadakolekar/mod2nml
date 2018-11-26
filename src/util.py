@@ -15,8 +15,12 @@ def feedData(templateFile,data):
     return feeder.merge(data)
 
 def isValidBlock(blockHeading):
-    blocks = ['TITLE','UNITS','NEURON','PARAMETER','ASSIGNED','STATE','PROCEDURE','DERIVATIVE','BREAKPOINT','INITIAL','UNITSOFF','UNITSON']
-    if blockHeading in blocks:
+    # Check for procedure block
+    if(blockHeading.startswith('PROCEDURE')):
         return True
     else:
-        return False
+        blocks = ['TITLE','UNITS','NEURON','PARAMETER','ASSIGNED','STATE','PROCEDURE','DERIVATIVE','BREAKPOINT','INITIAL','UNITSOFF','UNITSON']
+        if blockHeading in blocks:
+            return True
+        else:
+            return False
