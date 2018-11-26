@@ -32,6 +32,7 @@ def lexer(modFile,verbose=False):
                 
                 blocks['TITLE'] = line[6:].strip()
             
+            # Complete this
             if line.startswith('PROCEDURE'):
                 blocks['PROCEDURE'] = {}
 
@@ -49,6 +50,7 @@ def lexer(modFile,verbose=False):
                     dictData = line[braceIndex+1:]
                     braceCount = util.checkBraces(dictData,1)
 
+                    # Loop until block terminates    
                     while braceCount>0:
                         
                         # If data in dataDict

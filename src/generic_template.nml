@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2beta4.xsd" 
+         id="${id}">
+
+    <notes>NeuroML file automatically generated from an NMODL file</notes>
+
+    <ionChannel id="${id}" conductance="10pS" type="${type}" species="${species}">
+        
+        #if($notes)
+        <notes>${notes}</notes>
+        #end
+        
+#foreach ($gate in $gates)##
+
+        <gate id="${gate.id}" instances="${gate.instances}">
+
+            <closed_state id="${gate.closed}"/>
+            <open_state id="${gate.open}"/>
+            
+            <transition name="alpha" from="${gate.closed}" to="${gate.open}" expr_form="${gate.forwardEquationForm}" expr="${gate.expr}" />
+            <transition name="beta" from="${gate.open}" to="${gate.closed}" expr_form="${gate.backwardEquationForm}" expr="${gate.expr}" />
+
+        </gate>
+
+#end##   
+        
+    </ionChannel>
+    
+</neuroml>
