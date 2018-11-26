@@ -31,11 +31,6 @@ def lexer(modFile,verbose=False):
             if line.startswith('TITLE'):
                 
                 blocks['TITLE'] = line[6:].strip()
-            
-            # Complete this
-            if line.startswith('PROCEDURE'):
-                #DEBUG
-                print("Procedure Detected --> ",currentLineNumber)
 
             
             if '{' in line or line.startswith('PROCEDURE'):
