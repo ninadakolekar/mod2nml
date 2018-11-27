@@ -87,6 +87,7 @@ def lexer(modFile,verbose=False):
 
     neuronBlock = blocks['NEURON']
     breakpointBlock = blocks['BREAKPOINT']
+    potentials(neuronBlock, blocks['PARAMETER'],blocks['INITIAL'])
 
     for line in neuronBlock:
         if line.startswith('SUFFIX'):
@@ -140,6 +141,15 @@ def countInstances(br,ch):
                 count+=1
     return str(count)
 
+def potentials(neuronBlock, paramBlock,initBlock):
+    vDict = {}
+    for item in neuronBlock:
+        line = item.split('?')[0]
+        if line.startswith('USEION'):
+            keywords = line.split(" ")
+            vDict['ion'] = keywords[keywords.index('USEION')+1]
+        
+    print("VDICT: ",vDict)
 
 def procParser(procedureBlock,stateBlock):
     line = ""
