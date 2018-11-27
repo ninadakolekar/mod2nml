@@ -10,4 +10,4 @@ def translator(dataFile,verbose):
   translatorWrapper(tokens,"channel_template.nml","output.nml")
   
 if __name__=="__main__":
-    translator("../examples/mod/K_HH.mod",True)
+    translator("../examples/mod/NaChannel_HH.mod",True)

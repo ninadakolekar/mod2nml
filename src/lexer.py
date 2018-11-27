@@ -1,6 +1,6 @@
 import sys
 import os
-
+import re
 import airspeed
 
 # Custom modules
@@ -75,6 +75,8 @@ def lexer(modFile,verbose=False):
 
         currentLineNumber+=1
     
+    procedureBlock = blocks['PROCEDURE']
+
     stateBlock = blocks['STATE']
 
     for line in stateBlock:
@@ -94,7 +96,6 @@ def lexer(modFile,verbose=False):
                 data['species'] = line.split("WRITE")[1].split()[0]
 
     gateList = []
-
     for state in stateBlock:
         gate = {}
         gate['id'] = state
@@ -103,17 +104,23 @@ def lexer(modFile,verbose=False):
         gate['open'] = state
         gate['forwardEquationForm'] = getEquationForm()
         gate['backwardEquationForm'] = getEquationForm()
+        gate['forwardEquationForm']  = 'generic'
+        gate['backwardEquationForm']  = 'generic'
+        procDict = procParser(procedureBlock,stateBlock)        
+        # gate['forwardExpr'] = procDict['SYMTAB']['alpha']
+        # gate['backwardExpr'] = procDict['SYMTAB']['beta']
         gateList.append(gate)
         
     data['gates'] = gateList
 
     data['type'] = 'ionChannelHH'
 
-    procedureBlock = blocks['PROCEDURE']
-
     if verbose:
         import pprint
         pp = pprint.PrettyPrinter(depth=4)
+        print("\n\n*** PARSING & IR ***\n\n")
+        pp.pprint(procDict)
+        print('\n\n**** LEXICAL ANALYSIS ****\n\n')
         pp.pprint(blocks)
     
     return data
@@ -133,11 +140,14 @@ def countInstances(br,ch):
                 count+=1
     return str(count)
 
-# Input is list of statements of procedure block
-def procParser(procedureBlock):
+
+def procParser(procedureBlock,stateBlock):
     line = ""
     procDict = {}
-    procDict['SYMTAB'] = {}
+    procDict['SYMTAB']={}
+    for state in stateBlock:
+        procDict['SYMTAB'][state] = {}
+    count = 0
     for item in procedureBlock:
         if item.replace(" ","").endswith(','):
             line+=item.replace(" ","")
@@ -147,11 +157,19 @@ def procParser(procedureBlock):
                 procDict['LOCAL'] = line[5:].strip().split(',')
                 line = ""
             elif line.strip().startswith(tuple([x.replace(" ","") for x in procDict['LOCAL']])) and line.count('=')==1:
+                numbers=re.compile('[-]?\d+[.]\d+|[-]?\d+')
                 exp = line.split('=')
-                procDict['SYMTAB'][exp[0].replace(" ","")] = exp[1].replace(' ','')
+                if(len(numbers.findall(exp[1]))==1 and numbers.findall(exp[1])[0]==exp[1]):
+                    procDict['SYMTAB'][exp[0].replace(" ","")] = exp[1].replace(' ','')
+                else:
+                    procDict['SYMTAB'][stateBlock[count]][exp[0].replace(" ","")] = exp[1].replace(' ','')
+                    if line.startswith('beta') and count<len(state):
+                        count+=1
+                line=""
+            else:
+                if line.startswith('beta') and count<len(state):
+                    count+=1
                 line=""
     return procDict
-            
-
 if __name__=="__main__":
     lexer("../examples/mod/KCa_Channel.mod",True)

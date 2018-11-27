@@ -3,21 +3,32 @@
 <neuroml xmlns="http://www.neuroml.org/schema/neuroml2" 
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2beta4.xsd" 
-         id="KConductance">
+         id="NaChannel">
 
     <notes>NeuroML file automatically generated from an NMODL file</notes>
 
-    <ionChannel id="KConductance" conductance="10pS" type="ionChannelHH" species="ik">
+    <ionChannel id="NaChannel" conductance="10pS" type="ionChannelHH" species="ina">
         
                 
 
-        <gate id="n" instances="4">
+        <gate id="m" instances="3">
 
-            <closed_state id="n0"/>
-            <open_state id="n"/>
+            <closed_state id="m0"/>
+            <open_state id="m"/>
             
-            <transition name="alpha" from="n0" to="n" expr_form="" rate="" scale="" midpoint="" />
-            <transition name="beta" from="n" to="n0" expr_form="" rate="" scale="" midpoint="" />
+            <transition name="alpha" from="m0" to="m" expr_form="generic" rate="" scale="" midpoint="" />
+            <transition name="beta" from="m" to="m0" expr_form="generic" rate="" scale="" midpoint="" />
+
+        </gate>
+
+
+        <gate id="h" instances="1">
+
+            <closed_state id="h0"/>
+            <open_state id="h"/>
+            
+            <transition name="alpha" from="h0" to="h" expr_form="generic" rate="" scale="" midpoint="" />
+            <transition name="beta" from="h" to="h0" expr_form="generic" rate="" scale="" midpoint="" />
 
         </gate>
 
