@@ -27,13 +27,17 @@ def lexer(modFile,verbose=False):
 
         if len(line)>0:
 
+            if modFileData[currentLineNumber].startswith('?'):
+                currentLineNumber+=1
+                continue
+
             # Title of the mod file
             if line.startswith('TITLE'):
                 
                 blocks['TITLE'] = line[6:].strip()
 
             
-            if '{' in line or line.startswith('PROCEDURE'):
+            if '{' in line:
                 braceIndex = line.index('{')
                 blockHeading = line[:braceIndex].strip()
 
@@ -43,12 +47,16 @@ def lexer(modFile,verbose=False):
                     # Initialize empty list to store the parameters specified in this block
                     blocks[blockHeading] = []
 
-                    dictData = line[braceIndex+1:]
+                    dictData = [dataline for dataline in line[braceIndex+1:] if not dataline.startswith('?')]
+
                     braceCount = util.checkBraces(dictData,1)
 
                     # Loop until block terminates    
                     while braceCount>0:
-                        
+                        if isinstance(dictData,str) and dictData.startswith('?'):
+                            currentLineNumber+=1
+                            dictData = modFileData[currentLineNumber]
+                            continue 
                         # If data in dataDict
                         if(len(dictData)>0):
                             blocks[blockHeading].append(dictData)
@@ -121,10 +129,7 @@ def countInstances(br,ch):
                 count+=int(x.split('^')[1].replace(")",""))
             elif x==ch:
                 count+=1
-        print("countInstances "+s+": ",ch+" ",count)
     return str(count)
 
 if __name__=="__main__":
     lexer("../examples/mod/KCa_Channel.mod",True)
-
-
