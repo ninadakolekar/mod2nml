@@ -110,7 +110,6 @@ def lexer(modFile,verbose=False):
     data['type'] = 'ionChannelHH'
 
     procedureBlock = blocks['PROCEDURE']
-    procParser(procedureBlock)
 
     if verbose:
         import pprint
@@ -151,10 +150,7 @@ def procParser(procedureBlock):
                 exp = line.split('=')
                 procDict['SYMTAB'][exp[0].replace(" ","")] = exp[1].replace(' ','')
                 line=""
-            else:
-                print("NO ",line)
-                line=""
-    print("PROC: ",procDict)
+    return procDict
             
 
 if __name__=="__main__":
