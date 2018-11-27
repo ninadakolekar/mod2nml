@@ -2,7 +2,7 @@ import sys
 import os
 import re
 import airspeed
-
+from math import *
 # Custom modules
 import util
 
@@ -148,7 +148,11 @@ def potentials(neuronBlock, paramBlock,initBlock):
         if line.startswith('USEION'):
             keywords = line.split(" ")
             vDict['ion'] = keywords[keywords.index('USEION')+1]
-        
+    if('ion' in vDict):
+        for item in initBlock:
+            line = item.split('?')[0]
+            if line.startswith('e'+vDict['ion']) and '=' in line:
+                vDict['initConc'] = str(eval(line.split('=')[1]))
     print("VDICT: ",vDict)
 
 def procParser(procedureBlock,stateBlock):
@@ -167,10 +171,11 @@ def procParser(procedureBlock,stateBlock):
                 procDict['LOCAL'] = line[5:].strip().split(',')
                 line = ""
             elif line.strip().startswith(tuple([x.replace(" ","") for x in procDict['LOCAL']])) and line.count('=')==1:
-                numbers=re.compile('[-]?\d+[.]\d+|[-]?\d+')
+                numbers=re.compile('^([-+/*]\d+(\.\d+)?)*')
                 exp = line.split('=')
-                if(len(numbers.findall(exp[1]))==1 and numbers.findall(exp[1])[0]==exp[1]):
-                    procDict['SYMTAB'][exp[0].replace(" ","")] = exp[1].replace(' ','')
+                if(len(numbers.findall(exp[1]))==1 and exp[0].replace(" ","")!='alpha' and exp[0].replace(" ","")!='beta'):
+                    print(f'{exp[0].replace(" ","")} ',exp[1].replace(' ',''), eval(exp[1].replace(' ','')))
+                    procDict['SYMTAB'][exp[0].replace(" ","")] = str(eval(exp[1].replace(' ','')))
                 else:
                     procDict['SYMTAB'][stateBlock[count]][exp[0].replace(" ","")] = exp[1].replace(' ','')
                     if line.startswith('beta') and count<len(state):
