@@ -12,20 +12,28 @@
         #if($notes)
         <notes>${notes}</notes>
         #end
-        
+
+    #if($ion)
+    <current_voltage_relation cond_law="ohmic" ion="${ion}" default_erev="${initConc}" default_gmax="${gmax}"> 
+    #end
+
 #foreach ($gate in $gates)##
 
-        <gate id="${gate.id}" instances="${gate.instances}">
+            <gate id="${gate.id}" instances="${gate.instances}">
 
-            <closed_state id="${gate.closed}"/>
-            <open_state id="${gate.open}"/>
-            
-            <transition name="alpha" from="${gate.closed}" to="${gate.open}" expr_form="${gate.forwardEquationForm}" rate="" scale="" midpoint="" />
-            <transition name="beta" from="${gate.open}" to="${gate.closed}" expr_form="${gate.backwardEquationForm}" rate="" scale="" midpoint="" />
+                <closed_state id="${gate.closed}"/>
+                <open_state id="${gate.open}"/>
+                
+                <transition name="alpha" from="${gate.closed}" to="${gate.open}" expr_form="${gate.forwardEquationForm}" rate="" scale="" midpoint="" />
+                <transition name="beta" from="${gate.open}" to="${gate.closed}" expr_form="${gate.backwardEquationForm}" rate="" scale="" midpoint="" />
 
-        </gate>
+            </gate>
 
 #end##   
+
+    #if($ion)
+    <current_voltage_relation> 
+    #end
         
     </ionChannel>
     

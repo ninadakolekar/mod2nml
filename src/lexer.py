@@ -87,7 +87,10 @@ def lexer(modFile,verbose=False):
 
     neuronBlock = blocks['NEURON']
     breakpointBlock = blocks['BREAKPOINT']
-    potentials(neuronBlock, blocks['PARAMETER'],blocks['INITIAL'])
+    
+    potential = potentials(neuronBlock, blocks['PARAMETER'],blocks['INITIAL'])
+    for key in potential:
+        data[key] = potential[key]
 
     for line in neuronBlock:
         if line.startswith('SUFFIX'):
@@ -153,7 +156,11 @@ def potentials(neuronBlock, paramBlock,initBlock):
             line = item.split('?')[0]
             if line.startswith('e'+vDict['ion']) and '=' in line:
                 vDict['initConc'] = str(eval(line.split('=')[1]))
-    print("VDICT: ",vDict)
+    for item in paramBlock:
+        line = item.split('?')[0]
+        if line.startswith('gmax') and '=' in line:
+            vDict['gmax'] = str(int(1000*eval(line.split('=')[1].split('(')[0])))
+    return vDict
 
 def procParser(procedureBlock,stateBlock):
     line = ""
@@ -174,7 +181,6 @@ def procParser(procedureBlock,stateBlock):
                 numbers=re.compile('^([-+/*]\d+(\.\d+)?)*')
                 exp = line.split('=')
                 if(len(numbers.findall(exp[1]))==1 and exp[0].replace(" ","")!='alpha' and exp[0].replace(" ","")!='beta'):
-                    print(f'{exp[0].replace(" ","")} ',exp[1].replace(' ',''), eval(exp[1].replace(' ','')))
                     procDict['SYMTAB'][exp[0].replace(" ","")] = str(eval(exp[1].replace(' ','')))
                 else:
                     procDict['SYMTAB'][stateBlock[count]][exp[0].replace(" ","")] = exp[1].replace(' ','')
