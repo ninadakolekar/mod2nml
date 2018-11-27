@@ -45,6 +45,8 @@ def lexer(modFile,verbose=False):
                 if util.isValidBlock(blockHeading):
 
                     # Initialize empty list to store the parameters specified in this block
+                    if blockHeading.startswith('PROCEDURE'):
+                        blockHeading = 'PROCEDURE'
                     blocks[blockHeading] = []
 
                     dictData = [dataline for dataline in line[braceIndex+1:] if not dataline.startswith('?')]
@@ -107,7 +109,8 @@ def lexer(modFile,verbose=False):
 
     data['type'] = 'ionChannelHH'
 
-    # procedureBlock = blocks['PROCEDURE']
+    procedureBlock = blocks['PROCEDURE']
+    procParser(procedureBlock)
 
     if verbose:
         import pprint
@@ -130,6 +133,29 @@ def countInstances(br,ch):
             elif x==ch:
                 count+=1
     return str(count)
+
+# Input is list of statements of procedure block
+def procParser(procedureBlock):
+    line = ""
+    procDict = {}
+    procDict['SYMTAB'] = {}
+    for item in procedureBlock:
+        if item.replace(" ","").endswith(','):
+            line+=item.replace(" ","")
+        else:
+            line+=item.replace(" ","")
+            if line.startswith('LOCAL'):
+                procDict['LOCAL'] = line[5:].strip().split(',')
+                line = ""
+            elif line.strip().startswith(tuple([x.replace(" ","") for x in procDict['LOCAL']])) and line.count('=')==1:
+                exp = line.split('=')
+                procDict['SYMTAB'][exp[0].replace(" ","")] = exp[1].replace(' ','')
+                line=""
+            else:
+                print("NO ",line)
+                line=""
+    print("PROC: ",procDict)
+            
 
 if __name__=="__main__":
     lexer("../examples/mod/KCa_Channel.mod",True)

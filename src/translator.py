@@ -1,7 +1,6 @@
 from util import feedData
 from lexer import lexer
 
-
 def translatorWrapper(data,template,outFilename):
   output = open(outFilename,"w")
   output.write(feedData(template,data))
