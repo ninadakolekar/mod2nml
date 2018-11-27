@@ -3,7 +3,7 @@ import os
 import re
 import airspeed
 from math import *
-# Custom modules
+
 import util
 
 def lexer(modFile,verbose=False):
@@ -47,6 +47,8 @@ def lexer(modFile,verbose=False):
                     # Initialize empty list to store the parameters specified in this block
                     if blockHeading.startswith('PROCEDURE'):
                         blockHeading = 'PROCEDURE'
+                    elif blockHeading.startswith('DERIVATIVE'):
+                        blockHeading = 'DERIVATIVE'
                     blocks[blockHeading] = []
 
                     dictData = [dataline for dataline in line[braceIndex+1:] if not dataline.startswith('?')]
@@ -75,8 +77,9 @@ def lexer(modFile,verbose=False):
 
         currentLineNumber+=1
     
-    procedureBlock = blocks['PROCEDURE']
+    checkBlocks(blocks)
 
+    procedureBlock = blocks['PROCEDURE']
     stateBlock = blocks['STATE']
 
     for line in stateBlock:
@@ -129,6 +132,12 @@ def lexer(modFile,verbose=False):
     
     return data
 
+def checkBlocks(blocksDict):
+    blocks = ['TITLE','UNITS','NEURON','PARAMETER','ASSIGNED','STATE','PROCEDURE','BREAKPOINT','INITIAL']
+    for block in blocks:
+        if block not in blocksDict:
+            util.raiseLexicalError(f"{block} block not found.")
+
 # Ankur, please complete this function
 def getEquationForm():
     return ''
@@ -155,14 +164,15 @@ def potentials(neuronBlock, paramBlock,initBlock):
         for item in initBlock:
             line = item.split('?')[0]
             if line.startswith('e'+vDict['ion']) and '=' in line:
-                vDict['initConc'] = str(eval(line.split('=')[1]))
+                vDict['initConc'] = str(evaluate(line.split('=')[1]))
     for item in paramBlock:
         line = item.split('?')[0]
         if line.startswith('gmax') and '=' in line:
-            vDict['gmax'] = str(int(1000*eval(line.split('=')[1].split('(')[0])))
+            vDict['gmax'] = str(int(1000*evaluate(line.split('=')[1].split('(')[0])))
     return vDict
 
 def procParser(procedureBlock,stateBlock):
+    localFlag = False
     line = ""
     procDict = {}
     procDict['SYMTAB']={}
@@ -175,13 +185,17 @@ def procParser(procedureBlock,stateBlock):
         else:
             line+=item.replace(" ","")
             if line.startswith('LOCAL'):
+                localFlag = True
                 procDict['LOCAL'] = line[5:].strip().split(',')
                 line = ""
+            elif 'LOCAL' not in procDict:
+                util.raiseLexicalError("No LOCAL block found in PROCEDURE")
+                exit(1)
             elif line.strip().startswith(tuple([x.replace(" ","") for x in procDict['LOCAL']])) and line.count('=')==1:
                 numbers=re.compile('^([-+/*]\d+(\.\d+)?)*')
                 exp = line.split('=')
                 if(len(numbers.findall(exp[1]))==1 and exp[0].replace(" ","")!='alpha' and exp[0].replace(" ","")!='beta'):
-                    procDict['SYMTAB'][exp[0].replace(" ","")] = str(eval(exp[1].replace(' ','')))
+                    procDict['SYMTAB'][exp[0].replace(" ","")] = str(evaluate(exp[1].replace(' ','')))
                 else:
                     procDict['SYMTAB'][stateBlock[count]][exp[0].replace(" ","")] = exp[1].replace(' ','')
                     if line.startswith('beta') and count<len(state):
@@ -192,5 +206,14 @@ def procParser(procedureBlock,stateBlock):
                     count+=1
                 line=""
     return procDict
+  
+def evaluate(expression):
+    x = -1
+    try:
+        x = eval(expression)
+    except SyntaxError as err:
+        util.raiseSyntaxError('Unexpected EOF or invalid mathematical expression.')
+    return x
+
 if __name__=="__main__":
     lexer("../examples/mod/KCa_Channel.mod",True)

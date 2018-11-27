@@ -130,9 +130,6 @@ PROCEDURE settables(v(mV), cai(mM)) {
     v = v * 0.001 ? temporarily set v to units of equation...
             
     alpha = 2500/(1 + ( (1.5e-3 *(exp (-85*v))) / ca_conc))
-        
-    ? Set correct units of alpha for NEURON
-    alpha = alpha * 0.001 
     
     v = v * 1000 ? reset v
         
@@ -145,8 +142,6 @@ PROCEDURE settables(v(mV), cai(mM)) {
             
     beta = 1500/(1 + (ca_conc / (1.5e-4 * (exp (-77*v)))))
         
-    ? Set correct units of beta for NEURON
-    beta = beta * 0.001 
     
     v = v * 1000 ? reset v
         
