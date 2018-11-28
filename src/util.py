@@ -106,11 +106,11 @@ def substitutionwrappernon(a):
 
 def equationParser(expr):
     flag = 0
-    string1 = re.compile('[(]*[-]?[\d+][.][\d+][)]*[*][e][x][p][(]*[A-Za-z]+[+-][-]?[\d+][.][\d+][)]*[/][-]?[\d+][.][\d+][)]*')
+    string1=re.compile('[(]*[-]?\d+[.]\d+[)]*[*][e][x][p][(]*\w+[-][-]?\d+[.]\d+[)]*[/][-]?\d+[.]\d+[)]*')
     if(len(string1.findall(expr))!=0 and string1.findall(expr)[0] == expr):
         flag = 1
     else:
-        string1=re.compile('[(]*[-]?\d+[.][\d+][)]*[/][(]*[e][x][p][(]*[A-Za-z]+[+-][-]?\d+[.]\d+[)]*[/][(]*[-]?\d+[.]\d+[)]*[+][1][)]*')
+        string1=re.compile('[(]*[-]?\d+[.]\d+[)]*[/][e][x][p][(]*\w+[-][-]?\d+[.]\d+[)]*[/][-]?\d+[.]\d+[)]*[+][1][)]*')
         if(len(string1.findall(expr))!= 0 and string1.findall(expr)[0] == expr):
             flag = 2
         else:
