@@ -60,6 +60,18 @@ def substitutionwrapper(a):
         else:
             c[item]=string1
     result=substituteconstant(a,b,c)
+    i=0
+    for item in a['LOCAL']:
+        string1=a['SYMTAB'][item]
+        string2=re.compile('[-]?\d+[.]\d+|[-]?\d+')
+        if(len(string2.findall(string1))==1 and string2.findall(string1)[0] == string1):
+            b[item]=string1
+        else:
+            answer[item]=result[i]
+            i+=1
+    
+    return answer
+
 
 
 def equationParser(expr):
