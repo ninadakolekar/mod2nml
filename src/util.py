@@ -51,25 +51,27 @@ def substitutionwrapper(a):
     answer={}
     for item in a['LOCAL']:
         string3=re.compile('[-]?\d+')
-        string1=a['SYMTAB'][item]
-        if(len(string3.findall(string1))==1 and string3.findall(string1)[0] == string1):
-            a['SYMTAB'][item]+='.'+'0'
-        string1=a['SYMTAB'][item]
-        string2=re.compile('[-]?\d+[.]\d+|[-]?\d+')
-        if(len(string2.findall(string1))==1 and string2.findall(string1)[0] == string1):
-            b[item]=string1
-        else:
-            c[item]=string1
+        if(item in a['SYMTAB']):
+            string1=a['SYMTAB'][item]
+            if(len(string3.findall(string1))==1 and string3.findall(string1)[0] == string1):
+                a['SYMTAB'][item]+='.'+'0'
+            string1=a['SYMTAB'][item]
+            string2=re.compile('[-]?\d+[.]\d+|[-]?\d+')
+            if(len(string2.findall(string1))==1 and string2.findall(string1)[0] == string1):
+                b[item]=string1
+            else:
+                c[item]=string1
     result=substituteconstant(a,b,c)
     i=0
     for item in a['LOCAL']:
-        string1=a['SYMTAB'][item]
-        string2=re.compile('[-]?\d+[.]\d+|[-]?\d+')
-        if(len(string2.findall(string1))==1 and string2.findall(string1)[0] == string1):
-            b[item]=string1
-        else:
-            answer[item]=result[i]
-            i+=1
+        if(item in a['SYMTAB']): 
+            string1=a['SYMTAB'][item]
+            string2=re.compile('[-]?\d+[.]\d+|[-]?\d+')
+            if(len(string2.findall(string1))==1 and string2.findall(string1)[0] == string1):
+                b[item]=string1
+            else:
+                answer[item]=result[i]
+                i+=1
     
     return answer
 
@@ -79,25 +81,27 @@ def substitutionwrappernon(a):
     answer={}
     for item in a['LOCAL']:
         string3=re.compile('[-]?\d+')
-        string1=a['SYMTAB'][item]
-        if(len(string3.findall(string1))==1 and string3.findall(string1)[0] == string1):
-            a['SYMTAB'][item]+='.'+'0'
-        string1=a['SYMTAB'][item]
-        string2=re.compile('[-]?\d+[.]\d+|[-]?\d+')
-        if(len(string2.findall(string1))==1 and string2.findall(string1)[0] == string1):
-            b[item]=string1
-        else:
-            c[item]=string1
+        if(item in a['SYMTAB']):
+            string1=a['SYMTAB'][item]
+            if(len(string3.findall(string1))==1 and string3.findall(string1)[0] == string1):
+                a['SYMTAB'][item]+='.'+'0'
+            string1=a['SYMTAB'][item]
+            string2=re.compile('[-]?\d+[.]\d+|[-]?\d+')
+            if(len(string2.findall(string1))==1 and string2.findall(string1)[0] == string1):
+                b[item]=string1
+            else:
+                c[item]=string1
     result=substituteconstant(a,b,c)
     i=0
     for item in a['LOCAL']:
-        string1=a['SYMTAB'][item]
-        string2=re.compile('[-]?\d+[.]\d+|[-]?\d+')
-        if(len(string2.findall(string1))==1 and string2.findall(string1)[0] == string1):
-            b[item]=string1
-        else:
-            answer[item]=equationParser(result[i])
-            i+=1
+        if(item in a['SYMTAB']):
+            string1=a['SYMTAB'][item]
+            string2=re.compile('[-]?\d+[.]\d+|[-]?\d+')
+            if(len(string2.findall(string1))==1 and string2.findall(string1)[0] == string1):
+                b[item]=string1
+            else:
+                answer[item]=equationParser(result[i])
+                i+=1
     return answer
 
 
@@ -116,7 +120,6 @@ def equationParser(expr):
                 flag = 3
             else:
                 flag = 4
-                print('generic')
     a = {}
     if(flag == 1):
         string3=re.compile('[A-Za-z]+[-](\d+[.]\d+)')
