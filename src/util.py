@@ -1,4 +1,5 @@
 import airspeed
+import re
 
 def checkBraces(inputString, braceCounter):
     if len(inputString)>0:

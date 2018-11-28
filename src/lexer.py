@@ -125,9 +125,12 @@ def lexer(modFile,verbose,config):
         gateProcDict['SYMTAB']['alpha'] = procDict['SYMTAB'][state]['alpha']
         gateProcDict['SYMTAB']['beta'] = procDict['SYMTAB'][state]['beta']
         if config['generic']:
-            gate['forwardExpr'] = procDict['SYMTAB']['alpha']
-            gate['backwardExpr'] = procDict['SYMTAB']['beta']
-        else:
+            # subsDict = util.substitutionwrapper(gateProcDict)
+            import pprint
+            pp = pprint.PrettyPrinter(depth=4)
+            pp.pprint(gateProcDict)
+            # gate['forwardExpr'] = 
+            # gate['backwardExpr'] = procDict['SYMTAB']['beta']=
             
         gateList.append(gate)
         
