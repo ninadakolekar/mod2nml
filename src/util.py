@@ -25,19 +25,26 @@ def isValidBlock(blockHeading):
         else:
             return False
 
-def func(opIndexList,newVars,expr):
-    res = ""
-    k = 0
-    i= 0
-    while i in range(len(expr)):
-        if str(i) in opIndexList:
-            res+=expr[i]
-            i+=1
+def equationParser(expr):
+    flag = 0
+    string1 = re.compile('[(]*\d+[)]*[*][e][x][p][(]*[A-Za-z]+[-]\d+[)]*[/][(]*\d+[)]*')
+    
+    if (len(string1.findall(expr)) != 0 and string1.findall(expr)[0] == True):
+        print('exponential')
+        flag = 1
+    else:
+        string1 = re.compile('[(]*\d+[)]*\s[/]\s[(]*[e][x][p][(]*\w+\s[-]\d+[)]*[/]\s\d+[)]*')
+    if(string1.search(expr) is not None):
+        print('sigmoid')
+        flag = 2
+    else:
+        string1 = re.compile('[(]*\d+[)]*[*][(]*\w+\s[-]\s\d+[)]*[/][(]*\d+[)]*[/][(]*[1]\s[-]\s[e][x][p][(]*\w+\s[-]\s\d+[)]*[/][(]*\d+[)]*')
+        if (string1.search(expr)!=None):
+            flag = 3
         else:
-            res+=newVars[k]
-            i+=len(newVars[k])
-            k+=1
-    print(res)
+            print('generic')
+            flag = 4
+
 
 def raiseLexicalError(err):
     import sys
