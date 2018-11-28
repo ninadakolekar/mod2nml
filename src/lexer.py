@@ -131,11 +131,11 @@ def lexer(modFile,verbose,config):
         else:
             subsDict = util.substitutionwrappernon(gateProcDict)
 
-            # import pprint
-            # pp = pprint.PrettyPrinter(depth=4)
-            # print(state)
-            # pp.pprint(gateProcDict)
-            # pp.pprint(subsDict)
+            import pprint
+            pp = pprint.PrettyPrinter(depth=4)
+            print(state)
+            pp.pprint(gateProcDict)
+            pp.pprint(subsDict)
 
             if(subsDict['alpha']['type']=='generic'):
                 gate['forwardEquation'] = subsDict['alpha']['expr'].replace("--","+")
