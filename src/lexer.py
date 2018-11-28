@@ -6,7 +6,7 @@ from math import *
 
 import util
 
-def lexer(modFile,verbose=False):
+def lexer(modFile,verbose,config):
     
     try:
         open(modFile)
@@ -103,6 +103,7 @@ def lexer(modFile,verbose=False):
                 data['species'] = line.split("WRITE")[1].split()[0]
 
     gateList = []
+    procDict = procParser(procedureBlock,stateBlock)
     for state in stateBlock:
         gate = {}
         gate['id'] = state
@@ -113,9 +114,21 @@ def lexer(modFile,verbose=False):
         gate['backwardEquationForm'] = getEquationForm()
         gate['forwardEquationForm']  = 'generic'
         gate['backwardEquationForm']  = 'generic'
-        procDict = procParser(procedureBlock,stateBlock)        
-        # gate['forwardExpr'] = procDict['SYMTAB']['alpha']
-        # gate['backwardExpr'] = procDict['SYMTAB']['beta']
+        gateProcDict = {}
+        gateProcDict['LOCAL'] = procDict['LOCAL']
+        gateProcDict['SYMTAB'] = {}
+        print("k ",procDict['SYMTAB'][state]['alpha'])
+        for key in procDict['SYMTAB']:
+            if key not in stateBlock:
+                gateProcDict['SYMTAB'][key] = procDict['SYMTAB'][key]
+                gateProcDict['SYMTAB'][key] = procDict['SYMTAB'][key]
+        gateProcDict['SYMTAB']['alpha'] = procDict['SYMTAB'][state]['alpha']
+        gateProcDict['SYMTAB']['beta'] = procDict['SYMTAB'][state]['beta']
+        if config['generic']:
+            gate['forwardExpr'] = procDict['SYMTAB']['alpha']
+            gate['backwardExpr'] = procDict['SYMTAB']['beta']
+        else:
+            
         gateList.append(gate)
         
     data['gates'] = gateList
@@ -155,15 +168,20 @@ def countInstances(br,ch):
 
 def potentials(neuronBlock, paramBlock,initBlock):
     vDict = {}
+    ion_read = ""
     for item in neuronBlock:
         line = item.split('?')[0]
         if line.startswith('USEION'):
             keywords = line.split(" ")
             vDict['ion'] = keywords[keywords.index('USEION')+1]
+            if 'READ' == keywords[keywords.index('USEION')+2]:
+                ion_read = keywords[keywords.index('USEION')+3]
+            else:
+                ion_read = 'e'+vDict['ion']
     if('ion' in vDict):
         for item in initBlock:
             line = item.split('?')[0]
-            if line.startswith('e'+vDict['ion']) and '=' in line:
+            if line.startswith(ion_read) and '=' in line:
                 vDict['initConc'] = str(evaluate(line.split('=')[1]))
     for item in paramBlock:
         line = item.split('?')[0]
@@ -195,9 +213,9 @@ def procParser(procedureBlock,stateBlock):
                 numbers=re.compile('^([-+/*]\d+(\.\d+)?)*')
                 exp = line.split('=')
                 if(len(numbers.findall(exp[1]))==1 and exp[0].replace(" ","")!='alpha' and exp[0].replace(" ","")!='beta'):
-                    procDict['SYMTAB'][exp[0].replace(" ","")] = str(evaluate(exp[1].replace(' ','')))
+                    procDict['SYMTAB'][exp[0].replace(" ","")] = str(evaluate(exp[1].split('?')[0].replace(' ','')))
                 else:
-                    procDict['SYMTAB'][stateBlock[count]][exp[0].replace(" ","")] = exp[1].replace(' ','')
+                    procDict['SYMTAB'][stateBlock[count]][exp[0].replace(" ","")] = exp[1].split('?')[0].replace(' ','')
                     if line.startswith('beta') and count<len(state):
                         count+=1
                 line=""
@@ -213,6 +231,10 @@ def evaluate(expression):
         x = eval(expression)
     except SyntaxError as err:
         util.raiseSyntaxError('Unexpected EOF or invalid mathematical expression.')
+        pass
+    except NameError:
+        return expression
+    print("eval ",expression,"{:.10f}".format(float(x)))
     return x
 
 if __name__=="__main__":

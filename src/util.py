@@ -25,20 +25,6 @@ def isValidBlock(blockHeading):
         else:
             return False
 
-def func(opIndexList,newVars,expr):
-    res = ""
-    k = 0
-    i= 0
-    while i in range(len(expr)):
-        if str(i) in opIndexList:
-            res+=expr[i]
-            i+=1
-        else:
-            res+=newVars[k]
-            i+=len(newVars[k])
-            k+=1
-    print(res)
-
 def raiseLexicalError(err):
     import sys
     print(f"Error: {err}", file=sys.stderr)
@@ -48,6 +34,3 @@ def raiseSyntaxError(err):
     import sys
     print(f"Syntax Error: {err}", file=sys.stderr)
     exit(1)
-
-if __name__=='__main__':
-    func(['1', '5', '6', '8', '10', '11', '13'],['3', 'exp', 'x', '3', '4'],"3*exp((x-3)/4)")

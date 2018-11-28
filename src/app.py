@@ -8,10 +8,17 @@ def app():
     parser = argparse.ArgumentParser(description="*** MOD to NeuroML Translator ***")
     parser.add_argument("-i","--input", required=True,help="Input MOD file path", metavar="FILE",type=lambda x: is_valid_file(parser, x))
     parser.add_argument("-o","--output",  required=False,help="Output file path", metavar="FILE",type=lambda x: is_valid_dest(parser, x))
-    parser.add_argument("-v","--verbose",dest="verbose", help="increase output verbosity",action="store_true")
+    parser.add_argument("-v","--verbose",dest="verbose", help="Increase output verbosity",action="store_true")
+    parser.add_argument("-g","--generic",help="Generic model",action="store_true")
     args = parser.parse_args() 
 
-    translate(args.input,args.output,args.verbose)
+    config = {}
+    if args.generic:
+        config['generic'] = args.generic
+    else:
+        config['generic'] = False
+
+    translate(args.input,args.output,args.verbose,config)
 
 def is_valid_file(parser, arg):
     if not os.path.exists(arg):

@@ -5,12 +5,12 @@ def translatorWrapper(data,template,outFilename):
   output = open(outFilename,"w")
   output.write(feedData(template,data))
 
-def translate(dataFile,outFile,verbose):
-  tokens = lexer(dataFile,verbose)
+def translate(dataFile,outFile,verbose,config):
+  tokens = lexer(dataFile,verbose,config)
   if outFile is None:
     translatorWrapper(tokens,"channel_template.nml","output.nml")
   else:
     translatorWrapper(tokens,"channel_template.nml",outFile)
 
 if __name__=="__main__":
-    translate("../examples/mod/NaChannel_HH.mod",None,True)
+    translate("../examples/mod/NaChannel_HH.mod",None,True,{'generic':False})
