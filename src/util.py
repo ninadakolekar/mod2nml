@@ -24,6 +24,26 @@ def isValidBlock(blockHeading):
             return True
         else:
             return False
+            
+def combineboth(operatorindex,newvars,expr,b):
+
+    res=""
+    k=0
+    i=0
+    while i in range(len(expr)):
+        if str(i) in operatorindex:
+            res=res+expr[i]
+            i+=1
+        else:
+            if newvars[k] in b :
+                res=res+ b[newvars[k]]
+            else:
+                res=res+newvars[k]
+            i+=len(newvars[k])
+            k+=1
+    
+    return res
+
 
 def equationParser(expr):
     flag = 0
@@ -89,7 +109,7 @@ def equationParser(expr):
     
          
     return expr
-    
+
 def substituteconstant(a,b,d):
     result=[]
     for key1 in d:
