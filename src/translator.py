@@ -7,10 +7,15 @@ def translatorWrapper(data,template,outFilename):
 
 def translate(dataFile,outFile,verbose,config):
   tokens = lexer(dataFile,verbose,config)
-  if outFile is None:
-    translatorWrapper(tokens,"channel_template.nml","output.nml")
+  template = ""
+  if config['generic']:
+    template = "generic_template.nml"
   else:
-    translatorWrapper(tokens,"channel_template.nml",outFile)
+    template = "channel_template.nml"
+  if outFile is None:
+    translatorWrapper(tokens,template,"output.nml")
+  else:
+    translatorWrapper(tokens,template,outFile)
 
 if __name__=="__main__":
     translate("../examples/mod/NaChannel_HH.mod",None,True,{'generic':False})

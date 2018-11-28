@@ -24,8 +24,19 @@
                 <closed_state id="${gate.closed}"/>
                 <open_state id="${gate.open}"/>
                 
-                <transition name="alpha" from="${gate.closed}" to="${gate.open}" expr_form="${gate.forwardEquationForm}" rate="" scale="" midpoint="" />
-                <transition name="beta" from="${gate.open}" to="${gate.closed}" expr_form="${gate.backwardEquationForm}" rate="" scale="" midpoint="" />
+                #if($gate.frate)
+                    <transition name="alpha" from="${gate.closed}" to="${gate.open}" expr_form="${gate.fexpr_form}" rate="${gate.frate}" scale="${gate.fscale}" midpoint="${gate.fmp}" />
+                #end
+                #if($gate.forwardEquation)
+                    <transition name="alpha" from="${gate.closed}" to="${gate.open}" expr="${gate.forwardEquation}" expr_form="generic" />
+                #end
+
+                #if($gate.frate)
+                <transition name="beta" from="${gate.closed}" to="${gate.open}" expr_form="${gate.bexpr_form}" rate="${gate.brate}" scale="${gate.bscale}" midpoint="${gate.bmp}" />
+                #end
+                #if($gate.backwardEquation)
+                <transition name="beta" from="${gate.closed}" to="${gate.open}" expr="${gate.backwardEquation}" expr_form="generic" />
+                #end
 
             </gate>
 

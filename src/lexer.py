@@ -117,7 +117,6 @@ def lexer(modFile,verbose,config):
         gateProcDict = {}
         gateProcDict['LOCAL'] = procDict['LOCAL']
         gateProcDict['SYMTAB'] = {}
-        print("k ",procDict['SYMTAB'][state]['alpha'])
         for key in procDict['SYMTAB']:
             if key not in stateBlock:
                 gateProcDict['SYMTAB'][key] = procDict['SYMTAB'][key]
@@ -125,13 +124,35 @@ def lexer(modFile,verbose,config):
         gateProcDict['SYMTAB']['alpha'] = procDict['SYMTAB'][state]['alpha']
         gateProcDict['SYMTAB']['beta'] = procDict['SYMTAB'][state]['beta']
         if config['generic']:
-            # subsDict = util.substitutionwrapper(gateProcDict)
-            import pprint
-            pp = pprint.PrettyPrinter(depth=4)
-            pp.pprint(gateProcDict)
-            # gate['forwardExpr'] = 
-            # gate['backwardExpr'] = procDict['SYMTAB']['beta']=
-            
+            subsDict = util.substitutionwrapper(gateProcDict)
+            gate['forwardExpr'] = subsDict['alpha'].replace("--","+")
+            gate['backwardExpr'] = subsDict['beta'].replace("--","+")
+
+        else:
+            subsDict = util.substitutionwrappernon(gateProcDict)
+
+            # import pprint
+            # pp = pprint.PrettyPrinter(depth=4)
+            # print(state)
+            # pp.pprint(gateProcDict)
+            # pp.pprint(subsDict)
+
+            if(subsDict['alpha']['type']=='generic'):
+                gate['forwardEquation'] = subsDict['alpha']['expr'].replace("--","+")
+            else:
+                gate['fexpr_form'] = subsDict['alpha']['type']
+                gate['frate'] = subsDict['alpha']['rate']
+                gate['fscale'] = subsDict['alpha']['scale']
+                gate['fmp'] = subsDict['alpha']['midpoint']
+
+            if(subsDict['beta']['type']=='generic'):
+                gate['backwardEquation'] = subsDict['beta']['expr'].replace("--","+")
+            else:
+                gate['bexpr_form'] = subsDict['beta']['type']
+                gate['brate'] = subsDict['beta']['rate']
+                gate['bscale'] = subsDict['beta']['scale']
+                gate['bmp'] = subsDict['beta']['midpoint']
+
         gateList.append(gate)
         
     data['gates'] = gateList
@@ -189,7 +210,7 @@ def potentials(neuronBlock, paramBlock,initBlock):
     for item in paramBlock:
         line = item.split('?')[0]
         if line.startswith('gmax') and '=' in line:
-            vDict['gmax'] = str(int(1000*evaluate(line.split('=')[1].split('(')[0])))
+            vDict['gmax'] = str(float(1000*evaluate(line.split('=')[1].split('(')[0])))
     return vDict
 
 def procParser(procedureBlock,stateBlock):
