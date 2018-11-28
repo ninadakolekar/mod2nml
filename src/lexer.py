@@ -110,8 +110,6 @@ def lexer(modFile,verbose,config):
         gate['instances'] = countInstances(breakpointBlock,state)
         gate['closed'] = state + str(0)
         gate['open'] = state
-        gate['forwardEquationForm'] = getEquationForm()
-        gate['backwardEquationForm'] = getEquationForm()
         gate['forwardEquationForm']  = 'generic'
         gate['backwardEquationForm']  = 'generic'
         gateProcDict = {}
@@ -130,12 +128,12 @@ def lexer(modFile,verbose,config):
 
         else:
             subsDict = util.substitutionwrappernon(gateProcDict)
-
-            import pprint
-            pp = pprint.PrettyPrinter(depth=4)
-            print(state)
-            pp.pprint(gateProcDict)
-            pp.pprint(subsDict)
+            if verbose:
+                import pprint
+                pp = pprint.PrettyPrinter(depth=4)
+                print("State ",state)
+                pp.pprint(gateProcDict)
+                pp.pprint(subsDict)
 
             if(subsDict['alpha']['type']=='generic'):
                 gate['forwardEquation'] = subsDict['alpha']['expr'].replace("--","+")
@@ -162,7 +160,7 @@ def lexer(modFile,verbose,config):
     if verbose:
         import pprint
         pp = pprint.PrettyPrinter(depth=4)
-        print("\n\n*** PARSING & IR ***\n\n")
+        print("\n\n*** TRANSLATING IR ***\n\n")
         pp.pprint(procDict)
         print('\n\n**** LEXICAL ANALYSIS ****\n\n')
         pp.pprint(blocks)
@@ -174,10 +172,6 @@ def checkBlocks(blocksDict):
     for block in blocks:
         if block not in blocksDict:
             util.raiseLexicalError(f"{block} block not found.")
-
-# Ankur, please complete this function
-def getEquationForm():
-    return ''
 
 def countInstances(br,ch):
     count = 0
@@ -258,7 +252,6 @@ def evaluate(expression):
         pass
     except NameError:
         return expression
-    print("eval ",expression,"{:.10f}".format(float(x)))
     return x
 
 if __name__=="__main__":

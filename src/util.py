@@ -100,7 +100,6 @@ def substitutionwrappernon(a):
             if(len(string2.findall(string1))==1 and string2.findall(string1)[0] == string1):
                 b[item]=string1
             else:
-                print(result[i])
                 answer[item]=equationParser(result[i])
                 i+=1
     return answer
