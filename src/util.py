@@ -89,6 +89,26 @@ def equationParser(expr):
     
          
     return expr
+    
+def substituteconstant(a,b,d):
+    result=[]
+    for key1 in d:
+        operatorindex=[]
+        expr=d[key1]
+        newvars=[t for t in re.split('[+/%)(*-]',expr) if t!='']
+        operator = '[+/%)(*-]'
+        index=0
+        for c in expr:
+            j=0
+            if c not in re.split('[+/%)(*-]',expr) and c in operator:
+                operatorindex.append(str(index))
+                j+=1
+            index+=1
+        res=combineboth(operatorindex,newvars,expr,b)
+        result.append(res)
+    
+    return result
+
 
 def raiseLexicalError(err):
     import sys
