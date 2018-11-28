@@ -24,7 +24,7 @@ def isValidBlock(blockHeading):
             return True
         else:
             return False
-            
+
 def combineboth(operatorindex,newvars,expr,b):
 
     res=""
@@ -43,6 +43,23 @@ def combineboth(operatorindex,newvars,expr,b):
             k+=1
     
     return res
+
+def substitutionwrapper(a):
+    b={}
+    c={}
+    answer={}
+    for item in a['LOCAL']:
+        string3=re.compile('[-]?\d+')
+        string1=a['SYMTAB'][item]
+        if(len(string3.findall(string1))==1 and string3.findall(string1)[0] == string1):
+            a['SYMTAB'][item]+='.'+'0'
+        string1=a['SYMTAB'][item]
+        string2=re.compile('[-]?\d+[.]\d+|[-]?\d+')
+        if(len(string2.findall(string1))==1 and string2.findall(string1)[0] == string1):
+            b[item]=string1
+        else:
+            c[item]=string1
+    result=substituteconstant(a,b,c)
 
 
 def equationParser(expr):
