@@ -1,6 +1,3 @@
-# mod2nml
-NMODL to NeuroML Translator
-
 # MOD to NML Translator
 ### CS6383 - Introduction to Compiler Engineering
 
